@@ -2,10 +2,12 @@ from rest_framework import viewsets
 from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+
+from titles.views import TitleViewSet
+
 from .models import Review
 from .permissions import ReviewCommentPermissions
 from .serializers import CommentSerializer, ReviewSerializer
-from titles.views import TitleViewSet
 
 
 class ReviewViewSet(viewsets.ModelViewSet):

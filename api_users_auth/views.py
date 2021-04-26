@@ -1,15 +1,17 @@
 import uuid
+
 from django.core.mail import send_mail
 from django.http import HttpResponse
 from rest_framework import serializers, status, viewsets
-from rest_framework.decorators import api_view, action
+from rest_framework.decorators import action, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .serializers import CustomUserSerializer, MyTokenObtainPairSerializer, ConfirmationCodeSerializer
+from .models import ConfirmationCode, CustomUser
 from .permissions import IsAuthorOrStaffOrReadOnly
-from .models import CustomUser, ConfirmationCode
+from .serializers import (ConfirmationCodeSerializer, CustomUserSerializer,
+                          MyTokenObtainPairSerializer)
 
 
 class UserViewSet(viewsets.ModelViewSet):
