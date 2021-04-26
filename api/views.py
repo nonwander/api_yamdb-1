@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .models import Review
 from .permissions import ReviewCommentPermissions
 from .serializers import CommentSerializer, ReviewSerializer
+from titles.views import TitleViewSet
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -14,11 +15,11 @@ class ReviewViewSet(viewsets.ModelViewSet):
                           IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
-        title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
+        title = get_object_or_404(TitleViewSet, pk=self.kwargs.get('title_id'))
         serializer.save(author=self.request.user, title=title)
 
     def get_queryset(self):
-        title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
+        title = get_object_or_404(TitleViewSet, pk=self.kwargs.get('title_id'))
         return title.reviews.all()
 
 

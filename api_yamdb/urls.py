@@ -18,4 +18,3 @@ urlpatterns = [
     path('api/', include('api.urls')),
     path('api/', include('titles.urls')),
 ]
-
