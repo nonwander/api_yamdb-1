@@ -1,27 +1,10 @@
-from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import Avg
+
+from api_users_auth.models import CustomUser
+from titles.models import Title
+
 from .validators import score_validator
-
-
-class Roles(models.TextChoices):
-    USER = 'user', 'Пользователь'
-    MODERATOR = 'moderator', 'Модератор'
-    ADMIN = 'admin', 'Администратор'
-
-class User(AbstractUser):
-    bio = models.TextField('О себе', blank=True, null=True, )
-    email = models.EmailField('Email', unique=True)
-    role = models.CharField('Роль', max_length=10, choices=Roles.choices,
-                            default=Roles.USER)
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ('username',)
-
-    class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователи'
-        ordering = ('username',)
 
 
 class Review(models.Model):
@@ -37,7 +20,7 @@ class Review(models.Model):
         db_index=True,
     )
     author = models.ForeignKey(
-        User,
+        CustomUser,
         verbose_name='Автор',
         on_delete=models.CASCADE,
     )
@@ -69,7 +52,7 @@ class Comment(models.Model):
     text = models.TextField('Комментарий', blank=True, null=True)
 
     author = models.ForeignKey(
-        User,
+        CustomUser,
         verbose_name='Автор',
         on_delete=models.CASCADE,
     )
