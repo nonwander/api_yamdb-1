@@ -127,9 +127,16 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
 # Добавлено EugeneN
 AUTH_USER_MODEL = 'api_users_auth.CustomUser'
 
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
 # Добавлено EugeneN
 #AUTHENTICATION_BACKENDS = ['core.authentication.EmailBackend']
-AUTHENTICATION_BACKENDS = ['api_users_auth.EmailBackend']
+AUTHENTICATION_BACKENDS = [
+    #'core.authentication.Emailbackend',
+    'django.core.mail.backends.console.EmailBackend',
+    #'api_users_auth.backends.EmailBackend'
+    #'django.contrib.auth.backends.ModelBackend',
+]
 
 # Добавлено EugeneN
 # подключаем движок filebased.EmailBackend

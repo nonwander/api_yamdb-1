@@ -3,8 +3,8 @@ import uuid
 from django.core.mail import send_mail
 from django.http import HttpResponse
 from rest_framework import serializers, status, viewsets
-from rest_framework.decorators import action, api_view
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, action
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -17,7 +17,7 @@ from .serializers import (ConfirmationCodeSerializer, CustomUserSerializer,
 class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
-    permission_classes = (IsAuthorOrStaffOrReadOnly,)
+    permission_classes = (IsAuthenticatedOrReadOnly, IsAuthorOrStaffOrReadOnly,)
     filterset_fields = ('email',)
     lookup_field = 'username'
 
@@ -43,7 +43,7 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 @api_view(['POST'])
 def get_confirmation_code(request):
-    serializer = serializers.ConfirmationCodeSerializer(data=request.data)
+    serializer = ConfirmationCodeSerializer(data=request.data)
     if not serializer.is_valid():
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     user_email = serializer.validated_data['email']

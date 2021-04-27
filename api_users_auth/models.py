@@ -33,11 +33,11 @@ class CustomUser(AbstractUser):
 
     @property
     def is_admin(self):
-        return self.role == self.role('admin')
+        return self.role == self.ROLE_ADMIN
     
     @property
     def is_moderator(self):
-        return self.role == self.role('moderator')
+        return self.role == self.ROLE_MODERATOR
 
     def __str__(self):
         return self.email
