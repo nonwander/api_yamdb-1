@@ -5,9 +5,12 @@ from .models import ConfirmationCode, CustomUser
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
+    role = serializers.CharField(max_length=10)
+    bio = serializers.CharField(max_length=500)
 
     class Meta:
-        fields = '__all__'
+        fields = ['username', 'email', 'role', 'bio']
         model = CustomUser
 
 

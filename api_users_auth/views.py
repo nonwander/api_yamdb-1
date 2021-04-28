@@ -1,21 +1,24 @@
 import uuid
+
 from django.core.mail import send_mail
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import api_view, action
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from .serializers import CustomUserSerializer, MyTokenObtainPairSerializer, ConfirmationCodeSerializer
+from .models import ConfirmationCode, CustomUser
 from .permissions import IsAuthorOrStaffOrReadOnly
-from .models import CustomUser, ConfirmationCode
+from .serializers import (ConfirmationCodeSerializer, CustomUserSerializer,
+                          MyTokenObtainPairSerializer)
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    #queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, IsAuthorOrStaffOrReadOnly,)
+    
     filterset_fields = ('email',)
     lookup_field = 'username'
 
@@ -33,6 +36,10 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data)
+
+    def get_queryset(self):
+        user = get_object_or_404(CustomUser, username=self.request.user)
+        return user.objects.all()
 
 
 class MyTokenObtainPairView(TokenObtainPairView):

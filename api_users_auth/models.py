@@ -3,6 +3,8 @@ from django.db import models
 
 
 class CustomUser(AbstractUser):
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
     ROLE_USER = 'user'
     ROLE_MODERATOR = 'moderator'
     ROLE_ADMIN = 'admin'
@@ -11,21 +13,21 @@ class CustomUser(AbstractUser):
         (ROLE_MODERATOR, 'Модератор'),
         (ROLE_ADMIN, 'Админ'),
     )
-    #username = None
     role = models.CharField(
         choices=USERS_ROLE,
         max_length=10,
         verbose_name='Роль пользователя',
         default='user'
     )
+
     email = models.EmailField('e-mail', unique=True)
     bio = models.TextField(
         max_length=500,
         blank=True,
         null=True,
     )
-
-    objects = UserManager
+    #username = None
+    #objects = UserManager()
 
     @property
     def is_admin(self):
@@ -36,7 +38,7 @@ class CustomUser(AbstractUser):
         return self.role == self.ROLE_MODERATOR
 
     def __str__(self):
-        return self.username
+        return self.email
 
 
 class ConfirmationCode(models.Model):
