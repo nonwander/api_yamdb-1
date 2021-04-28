@@ -1,12 +1,5 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
-
-
-ROLE = [
-    ('user', 'user'),
-    ('moderator', 'moderator'),
-    ('admin', 'admin'),
-]
 
 
 class CustomUser(AbstractUser):
@@ -18,7 +11,7 @@ class CustomUser(AbstractUser):
         (ROLE_MODERATOR, 'Модератор'),
         (ROLE_ADMIN, 'Админ'),
     )
-
+    #username = None
     role = models.CharField(
         choices=USERS_ROLE,
         max_length=10,
@@ -32,6 +25,8 @@ class CustomUser(AbstractUser):
         null=True,
     )
 
+    objects = UserManager
+
     @property
     def is_admin(self):
         return self.role == self.ROLE_ADMIN
@@ -41,7 +36,7 @@ class CustomUser(AbstractUser):
         return self.role == self.ROLE_MODERATOR
 
     def __str__(self):
-        return self.email
+        return self.username
 
 
 class ConfirmationCode(models.Model):

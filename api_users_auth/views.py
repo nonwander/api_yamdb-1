@@ -13,7 +13,7 @@ from .models import CustomUser, ConfirmationCode
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = CustomUser.objects.all()
+    #queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, IsAuthorOrStaffOrReadOnly,)
     filterset_fields = ('email',)
