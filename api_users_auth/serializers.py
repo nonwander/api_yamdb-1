@@ -1,16 +1,18 @@
 from rest_framework import serializers
+from rest_framework import validators
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from .models import ConfirmationCode, CustomUser
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField()
-    role = serializers.CharField(max_length=10)
-    bio = serializers.CharField(max_length=500)
+    username = serializers.CharField(
+        required=True,
+        validators=[validators.UniqueValidator(queryset=CustomUser.objects.all())]
+    )
 
     class Meta:
-        fields = ['username', 'email', 'role', 'bio']
+        fields = ['first_name', 'last_name', 'username', 'bio', 'email', 'role']
         model = CustomUser
 
 

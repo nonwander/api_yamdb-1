@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
+#from .managers import CustomUserManager
 
 
 class CustomUser(AbstractUser):
@@ -19,14 +20,13 @@ class CustomUser(AbstractUser):
         verbose_name='Роль пользователя',
         default='user'
     )
-
-    email = models.EmailField('e-mail', unique=True)
+    email = models.EmailField('e-mail', unique=True, blank=False)
     bio = models.TextField(
         max_length=500,
         blank=True,
         null=True,
     )
-    #username = None
+    confirmation_code = models.TextField(null=True, default='')
     #objects = UserManager()
 
     @property
@@ -38,7 +38,10 @@ class CustomUser(AbstractUser):
         return self.role == self.ROLE_MODERATOR
 
     def __str__(self):
-        return self.email
+        return self.username
+
+    class Meta:
+        ordering = ['id']
 
 
 class ConfirmationCode(models.Model):
