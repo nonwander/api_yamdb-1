@@ -7,8 +7,6 @@ ROLE = [
     ('moderator', 'moderator'),
     ('admin', 'admin'),
 ]
-
-
 class CustomUser(AbstractUser):
     ROLE_USER = 'user'
     ROLE_MODERATOR = 'moderator'
@@ -41,6 +39,9 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.email
+
+
+
 
 
 class ConfirmationCode(models.Model):

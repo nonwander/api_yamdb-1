@@ -8,7 +8,7 @@ API_VER = 'v1'
 
 
 router = DefaultRouter()
-router.register(r'users', UserViewSet, basename='users')
+router.register(r'users', UserViewSet)
 #router.register('auth/email', )
 
 urlpatterns = [
@@ -18,8 +18,5 @@ urlpatterns = [
          MyTokenObtainPairView.as_view(),
          name='token_obtain_pair'
          ),
-    path(f'{API_VER}/token/refresh/',
-         TokenRefreshView.as_view(),
-         name='token_refresh'
-         ),
+    path('{API_VER}/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
