@@ -2,7 +2,6 @@ from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
 #from .managers import CustomUserManager
 
-
 class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -42,6 +41,9 @@ class CustomUser(AbstractUser):
 
     class Meta:
         ordering = ['id']
+
+
+
 
 
 class ConfirmationCode(models.Model):

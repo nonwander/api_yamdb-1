@@ -17,8 +17,5 @@ urlpatterns = [
          MyTokenObtainPairView.as_view(),
          name='token_obtain_pair'
          ),
-    path(f'{API_VER}/token/refresh/',
-         TokenRefreshView.as_view(),
-         name='token_refresh'
-         ),
+    path('{API_VER}/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
