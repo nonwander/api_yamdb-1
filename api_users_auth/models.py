@@ -1,13 +1,10 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.db import models
+#from .managers import CustomUserManager
 
-
-ROLE = [
-    ('user', 'user'),
-    ('moderator', 'moderator'),
-    ('admin', 'admin'),
-]
 class CustomUser(AbstractUser):
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
     ROLE_USER = 'user'
     ROLE_MODERATOR = 'moderator'
     ROLE_ADMIN = 'admin'
@@ -22,12 +19,14 @@ class CustomUser(AbstractUser):
         verbose_name='Роль пользователя',
         default='user'
     )
-    email = models.EmailField('e-mail', unique=True)
+    email = models.EmailField('e-mail', unique=True, blank=False)
     bio = models.TextField(
         max_length=500,
         blank=True,
         null=True,
     )
+    confirmation_code = models.TextField(null=True, default='')
+    #objects = UserManager()
 
     @property
     def is_admin(self):
@@ -38,7 +37,10 @@ class CustomUser(AbstractUser):
         return self.role == self.ROLE_MODERATOR
 
     def __str__(self):
-        return self.email
+        return self.username
+
+    class Meta:
+        ordering = ['id']
 
 
 
