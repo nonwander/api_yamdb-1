@@ -1,10 +1,10 @@
-from django.contrib.auth.models import AbstractUser, UserManager
+from django.contrib.auth.models import AbstractUser
 from django.db import models
-#from .managers import CustomUserManager
+from rest_framework import permissions
 
 class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['username',]
     ROLE_USER = 'user'
     ROLE_MODERATOR = 'moderator'
     ROLE_ADMIN = 'admin'
@@ -26,12 +26,11 @@ class CustomUser(AbstractUser):
         null=True,
     )
     confirmation_code = models.TextField(null=True, default='')
-    #objects = UserManager()
 
     @property
     def is_admin(self):
         return self.role == self.ROLE_ADMIN
-    
+
     @property
     def is_moderator(self):
         return self.role == self.ROLE_MODERATOR
