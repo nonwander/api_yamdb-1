@@ -129,13 +129,13 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
 AUTH_USER_MODEL = 'api_users_auth.CustomUser'
 
 # Добавлено EugeneN
-#AUTHENTICATION_BACKENDS = ['core.authentication.EmailBackend']
+# AUTHENTICATION_BACKENDS = ['core.authentication.EmailBackend']
 
 AUTHENTICATION_BACKENDS = [
-    #'core.authentication.Emailbackend',
+    # 'core.authentication.Emailbackend',
     'django.core.mail.backends.console.EmailBackend',
-    #'api_users_auth.backends.EmailBackend'
-    #'django.contrib.auth.backends.ModelBackend',
+    # 'api_users_auth.backends.EmailBackend'
+    # 'django.contrib.auth.backends.ModelBackend',
 ]
 
 # Добавлено EugeneN

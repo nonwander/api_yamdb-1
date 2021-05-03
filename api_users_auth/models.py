@@ -1,10 +1,10 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from rest_framework import permissions
+
 
 class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username',]
+    REQUIRED_FIELDS = ['username', ]
     ROLE_USER = 'user'
     ROLE_MODERATOR = 'moderator'
     ROLE_ADMIN = 'admin'
@@ -40,9 +40,6 @@ class CustomUser(AbstractUser):
 
     class Meta:
         ordering = ['id']
-
-
-
 
 
 class ConfirmationCode(models.Model):

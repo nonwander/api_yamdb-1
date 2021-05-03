@@ -2,16 +2,15 @@ import uuid
 
 from django.core.mail import send_mail
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import serializers, status, viewsets
-from rest_framework.decorators import api_view, action
+from rest_framework import status, viewsets
+from rest_framework.decorators import action, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import ConfirmationCode, CustomUser
-from .permissions import IsAdminRole, IsAuthorOrStaffOrReadOnly, IsSuperuser
+from .permissions import IsAdminRole, IsSuperuser
 from .serializers import (ConfirmationCodeSerializer, CustomUserSerializer,
                           MyTokenObtainPairSerializer)
 
@@ -30,9 +29,9 @@ class UserViewSet(viewsets.ModelViewSet):
     lookup_field = 'username'
 
     @action(detail=False,
-        methods=['GET', 'PATCH'],
-        permission_classes = (IsAuthenticated,)
-    )
+            methods=['GET', 'PATCH'],
+            permission_classes=(IsAuthenticated,)
+            )
     def me(self, request):
         user = self.request.user
         serializer = self.get_serializer(
@@ -57,7 +56,6 @@ def get_confirmation_code(request):
     if not serializer.is_valid():
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     user_email = serializer.validated_data['email']
-    #user = CustomUser.objects.get_or_create(username='username', user_email='email')
     confirmation_code = str(uuid.uuid4())
     if confirmation_code is not None:
         send_mail(
@@ -71,5 +69,5 @@ def get_confirmation_code(request):
             email=user_email,
             confirmation_code=confirmation_code
         )
-        return  HttpResponse(f'Confirmation code was sent to your email')
+        return HttpResponse(f"{'Confirmation code was sent to your email'}")
     return HttpResponseUnauthorized()
