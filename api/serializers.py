@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from .models import Comment, Review
 
+
 class ReviewSerializer(serializers.ModelSerializer):
     text = serializers.CharField()
     author = serializers.ReadOnlyField(source='author.username')

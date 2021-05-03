@@ -29,13 +29,17 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'rest_framework',
+    'rest_framework.authtoken',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_filters',
     'api',
+    'api_users_auth',
+    'titles',
 ]
 
 MIDDLEWARE = [
@@ -121,13 +125,42 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
 
+# Добавлено EugeneN
+AUTH_USER_MODEL = 'api_users_auth.CustomUser'
+
+# Добавлено EugeneN
+#AUTHENTICATION_BACKENDS = ['core.authentication.EmailBackend']
+
+AUTHENTICATION_BACKENDS = [
+    #'core.authentication.Emailbackend',
+    'django.core.mail.backends.console.EmailBackend',
+    #'api_users_auth.backends.EmailBackend'
+    #'django.contrib.auth.backends.ModelBackend',
+]
+
+# Добавлено EugeneN
+# подключаем движок filebased.EmailBackend
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+
+# указываем директорию, в которую будут складываться файлы писем
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
+
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'api_users_auth.serializers.CustomUserSerializer',
+}
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ),
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20
