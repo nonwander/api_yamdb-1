@@ -5,7 +5,7 @@ from rest_framework import permissions
 
 class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['username',]
     ROLE_USER = 'user'
     ROLE_MODERATOR = 'moderator'
     ROLE_ADMIN = 'admin'
@@ -31,6 +31,10 @@ class CustomUser(AbstractUser):
     @property
     def is_admin(self):
         return self.role == self.ROLE_ADMIN
+
+    @property
+    def is_moderator(self):
+        return self.role == self.ROLE_MODERATOR
 
     def __str__(self):
         return self.username

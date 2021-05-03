@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import ConfirmationCode, CustomUser
-from .permissions import IsAdminRole, IsAuthorOrStaffOrReadOnly
+from .permissions import IsAdminRole, IsAuthorOrStaffOrReadOnly, IsSuperuser
 from .serializers import (ConfirmationCodeSerializer, CustomUserSerializer,
                           MyTokenObtainPairSerializer)
 
@@ -24,7 +24,7 @@ class HttpResponseUnauthorized(HttpResponse):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
-    permission_classes = (IsAdminRole,)
+    permission_classes = (IsAdminRole | IsSuperuser, IsAuthenticated,)
     filter_backends = [DjangoFilterBackend, ]
     filterset_fields = ('username',)
     lookup_field = 'username'
@@ -51,10 +51,13 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 @api_view(['POST'])
 def get_confirmation_code(request):
+    print('request:', request)
     serializer = ConfirmationCodeSerializer(data=request.data)
+    print('serializer = ', serializer)
     if not serializer.is_valid():
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     user_email = serializer.validated_data['email']
+    #user = CustomUser.objects.get_or_create(username='username', user_email='email')
     confirmation_code = str(uuid.uuid4())
     if confirmation_code is not None:
         send_mail(

@@ -20,8 +20,14 @@ class IsAdminOrReadOnly(permissions.BasePermission):
         )
 """
 
+class IsSuperuser(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        return (request.user.is_superuser)
+
+
 class IsAdminRole(permissions.BasePermission):
-    
+
     def has_permission(self, request, view):
         if request.user.is_anonymous:
             return request.user.is_staff
@@ -29,11 +35,17 @@ class IsAdminRole(permissions.BasePermission):
             or request.user.is_admin
     )
 
+"""    
+    def has_object_permission(self, request, view, obj):
+        return request.user.is_authenticated and request.user.is_admin
+ 
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.is_admin
+
     def has_delete_permission(self, request):
         if request.user.is_admin:
             return False
  
- """   
     def has_object_permission(self, request, view, obj):
         return (
             request.method in permissions.SAFE_METHODS
