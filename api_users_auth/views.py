@@ -46,7 +46,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-class MyTokenObtainPairView(TokenObtainPairView):
+class TokenObtainPairView(TokenObtainPairView):
     serializer_class = TokenObtainPairSerializer
 
 
@@ -56,8 +56,6 @@ def get_confirmation_code(request):
     serializer.is_valid(raise_exception=True)
     user_email = serializer.validated_data['email']
     confirmation_code = str(uuid.uuid4())
-    if confirmation_code is None:
-        return HttpResponseUnauthorized()
     send_mail(
         'Your confirmation code',
         confirmation_code,

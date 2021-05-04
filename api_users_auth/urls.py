@@ -2,7 +2,7 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from .views import MyTokenObtainPairView, UserViewSet, get_confirmation_code
+from .views import TokenObtainPairView, UserViewSet, get_confirmation_code
 
 router_v1 = DefaultRouter()
 router_v1.register(r'users', UserViewSet, basename='users')
@@ -16,7 +16,7 @@ urlpatterns = [
     ),
     path(
         'v1/auth/token/',
-        MyTokenObtainPairView.as_view(),
+        TokenObtainPairView.as_view(),
         name='token_obtain_pair'
     ),
     path(
