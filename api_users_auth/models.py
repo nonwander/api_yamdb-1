@@ -17,7 +17,7 @@ class CustomUser(AbstractUser):
         choices=USERS_ROLE,
         max_length=10,
         verbose_name='Роль пользователя',
-        default='user'
+        default=ROLE_USER
     )
     email = models.EmailField('e-mail', unique=True, blank=False)
     bio = models.TextField(
@@ -25,7 +25,6 @@ class CustomUser(AbstractUser):
         blank=True,
         null=True,
     )
-    confirmation_code = models.TextField(null=True, default='')
 
     @property
     def is_admin(self):

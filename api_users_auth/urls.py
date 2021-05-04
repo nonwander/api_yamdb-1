@@ -2,26 +2,27 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from .views import MyTokenObtainPairView, UserViewSet, get_confirmation_code
-
-API_VER = 'v1'
+from .views import UserViewSet, MyTokenObtainPairView, get_confirmation_code
 
 
-router = DefaultRouter()
-router.register(r'users', UserViewSet, basename='users')
+router_v1 = DefaultRouter()
+router_v1.register(r'users', UserViewSet, basename='users')
 
 urlpatterns = [
-    path(f'{API_VER}/', include(router.urls)),
+    path('v1/', include(router_v1.urls)),
     path(
-        f'{API_VER}/auth/email/',
+        'v1/auth/email/',
         get_confirmation_code,
-        name='get_confirmation_code'),
-    path(f'{API_VER}/auth/token/',
-         MyTokenObtainPairView.as_view(),
-         name='token_obtain_pair'
-         ),
+        name='get_confirmation_code'
+    ),
     path(
-        '{API_VER}/token/refresh/',
+        'v1/auth/token/',
+        MyTokenObtainPairView.as_view(),
+        name='token_obtain_pair'
+    ),
+    path(
+        'v1/token/refresh/',
         TokenRefreshView.as_view(),
-        name='token_refresh'),
+        name='token_refresh'
+    ),
 ]

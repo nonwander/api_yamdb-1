@@ -3,16 +3,17 @@ import uuid
 from django.core.mail import send_mail
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import status, viewsets
-from rest_framework.decorators import action, api_view
+from rest_framework import viewsets
+from rest_framework.decorators import api_view, action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+from api_yamdb.settings import ADMIN_EMAIL
 from .models import ConfirmationCode, CustomUser
 from .permissions import IsAdminRole, IsSuperuser
 from .serializers import (ConfirmationCodeSerializer, CustomUserSerializer,
-                          MyTokenObtainPairSerializer)
+                          TokenObtainPairSerializer)
 
 
 class HttpResponseUnauthorized(HttpResponse):
@@ -45,29 +46,26 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
-    serializer_class = MyTokenObtainPairSerializer
+    serializer_class = TokenObtainPairSerializer
 
 
 @api_view(['POST'])
 def get_confirmation_code(request):
-    print('request:', request)
     serializer = ConfirmationCodeSerializer(data=request.data)
-    print('serializer = ', serializer)
-    if not serializer.is_valid():
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    serializer.is_valid(raise_exception=True)
     user_email = serializer.validated_data['email']
     confirmation_code = str(uuid.uuid4())
-    if confirmation_code is not None:
-        send_mail(
-            'Your confirmation code',
-            confirmation_code,
-            'nemykin.eu@yandex.ru',
-            [user_email],
-            fail_silently=False,
-        )
-        ConfirmationCode.objects.create(
-            email=user_email,
-            confirmation_code=confirmation_code
-        )
-        return HttpResponse(f"{'Confirmation code was sent to your email'}")
-    return HttpResponseUnauthorized()
+    if confirmation_code is None:
+        return HttpResponseUnauthorized()
+    send_mail(
+        'Your confirmation code',
+        confirmation_code,
+        ADMIN_EMAIL,
+        [user_email],
+        fail_silently=False,
+    )
+    ConfirmationCode.objects.create(
+        email=user_email,
+        confirmation_code=confirmation_code
+    )
+    return HttpResponse('Confirmation code was sent to your email')
