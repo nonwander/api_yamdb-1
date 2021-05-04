@@ -5,51 +5,42 @@ from .models import Category, Genre, Title
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ('name', 'slug',)
+        exclude = ('id', )
         lookup_field = 'slug'
         model = Category
 
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ('name', 'slug',)
+        exclude = ('id', )
         lookup_field = 'slug'
         model = Genre
 
 
-class CategoryField(serializers.SlugRelatedField):
-    def to_representation(self, value):
-        serializer = CategorySerializer(value)
-        return serializer.data
-
-
-class GenreField(serializers.SlugRelatedField):
-    def to_representation(self, value):
-        serializer = GenreSerializer(value)
-        return serializer.data
-
-
 class TitleSerializer(serializers.ModelSerializer):
-    genre = GenreSerializer(many=True, read_only=True, )
-    category = CategorySerializer()
+
+    genre = GenreSerializer(many=True, read_only=True)
+    category = CategorySerializer(read_only=True)
     rating = serializers.IntegerField(read_only=True)
 
     class Meta:
-        fields = ('id', 'name', 'year', 'rating', 'description',
-                  'genre', 'category')
+        fields = ('id', 'name', 'year', 'rating',
+                  'description', 'genre', 'category')
         model = Title
 
 
 class TitlePostSerializer(serializers.ModelSerializer):
-    category = CategoryField(
+    category = serializers.SlugRelatedField(
         slug_field='slug',
         queryset=Category.objects.all(),
-        required=False)
-    genre = GenreField(
+        required=False
+    )
+    genre = serializers.SlugRelatedField(
         slug_field='slug',
-        queryset=Genre.objects.all(),
-        many=True)
+        many=True,
+        queryset=Genre.objects.all()
+    )
 
     class Meta:
-        model = Title
         fields = '__all__'
+        model = Title
