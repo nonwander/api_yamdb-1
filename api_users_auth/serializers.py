@@ -8,23 +8,28 @@ from .models import ConfirmationCode, CustomUser
 class CustomUserSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
         required=True,
-        validators=[validators.UniqueValidator(queryset=CustomUser.objects.all())]
+        validators=[validators.UniqueValidator(
+            queryset=CustomUser.objects.all()
+        )]
     )
 
     class Meta:
-        fields = ['first_name', 'last_name', 'username', 'bio', 'email', 'role']
+        fields = [
+            'first_name', 'last_name', 'username', 'bio', 'email', 'role'
+        ]
         model = CustomUser
 
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+class TokenObtainPairSerializer(TokenObtainPairSerializer):
     username_field = CustomUser.email
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['password'].required = False   
+        self.fields['password'].required = False
 
     def validate(self, attrs):
-        attrs['password'] = self.context['request'].data.get('confirmation_code')
+        password = self.context['request'].data.get('confirmation_code')
+        attrs['password'] = password
         return super().validate(attrs)
 
 
@@ -39,7 +44,7 @@ class ConfirmationCodeSerializer(serializers.Serializer):
         many=False,
         read_only=True
     )
-    code_date = serializers.DateTimeField()    
+    code_date = serializers.DateTimeField()
 
     class Meta:
         fields = '__all__'

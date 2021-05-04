@@ -1,5 +1,3 @@
-from django.db.models import query
-from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, viewsets
 from rest_framework.pagination import PageNumberPagination
@@ -31,4 +29,3 @@ class TitleViewSet(viewsets.ModelViewSet):
     pagination_class = PageNumberPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = TitleFilter
-   

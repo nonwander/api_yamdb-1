@@ -1,10 +1,10 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from rest_framework import permissions
+
 
 class CustomUser(AbstractUser):
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username',]
+    REQUIRED_FIELDS = ['username', ]
     ROLE_USER = 'user'
     ROLE_MODERATOR = 'moderator'
     ROLE_ADMIN = 'admin'
@@ -17,7 +17,7 @@ class CustomUser(AbstractUser):
         choices=USERS_ROLE,
         max_length=10,
         verbose_name='Роль пользователя',
-        default='user'
+        default=ROLE_USER
     )
     email = models.EmailField('e-mail', unique=True, blank=False)
     bio = models.TextField(
@@ -25,7 +25,6 @@ class CustomUser(AbstractUser):
         blank=True,
         null=True,
     )
-    confirmation_code = models.TextField(null=True, default='')
 
     @property
     def is_admin(self):
@@ -40,9 +39,6 @@ class CustomUser(AbstractUser):
 
     class Meta:
         ordering = ['id']
-
-
-
 
 
 class ConfirmationCode(models.Model):

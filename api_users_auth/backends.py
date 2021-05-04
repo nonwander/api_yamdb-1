@@ -12,7 +12,7 @@ class EmailBackend(ModelBackend):
             if user.check_password(password):
                 return user
         return None
-    
+
     def get_user(self, user_id):
         try:
             return CustomUser.objects.get(pk=user_id)

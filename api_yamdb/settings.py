@@ -128,22 +128,18 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static/'),)
 # Добавлено EugeneN
 AUTH_USER_MODEL = 'api_users_auth.CustomUser'
 
-# Добавлено EugeneN
-#AUTHENTICATION_BACKENDS = ['core.authentication.EmailBackend']
-
 AUTHENTICATION_BACKENDS = [
-    #'core.authentication.Emailbackend',
     'django.core.mail.backends.console.EmailBackend',
-    #'api_users_auth.backends.EmailBackend'
-    #'django.contrib.auth.backends.ModelBackend',
 ]
 
 # Добавлено EugeneN
 # подключаем движок filebased.EmailBackend
-EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+
+ADMIN_EMAIL = 'nemykin.eu@yandex.ru'
 
 # указываем директорию, в которую будут складываться файлы писем
-EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
 
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'api_users_auth.serializers.CustomUserSerializer',
