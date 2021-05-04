@@ -4,7 +4,7 @@ from rest_framework import filters, status, viewsets, mixins
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
-from api_users_auth.permissions import IsAdminRole
+from api_users_auth.permissions import IsAdminOrReadOnly
 
 from .filters import TitleFilter
 from .models import Category, Genre, Title
@@ -22,7 +22,7 @@ class SpecialViewSet(viewsets.GenericViewSet,
 class CategoryViewSet(SpecialViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [IsAdminRole]
+    permission_classes = [IsAdminOrReadOnly]
     pagination_class = PageNumberPagination
     lookup_field = 'slug'
     filter_backends = [filters.SearchFilter]
@@ -32,7 +32,7 @@ class CategoryViewSet(SpecialViewSet):
 class GenreViewSet(SpecialViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    permission_classes = [IsAdminRole]
+    permission_classes = [IsAdminOrReadOnly]
     pagination_class = PageNumberPagination
     lookup_field = 'slug'
     filter_backends = [filters.SearchFilter]
@@ -43,7 +43,7 @@ class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all().annotate(
         rating=Avg('reviews__score')).order_by('name')
     serializer_class = TitleSerializer
-    permission_classes = [IsAdminRole]
+    permission_classes = [IsAdminOrReadOnly]
     pagination_class = PageNumberPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = TitleFilter
