@@ -4,12 +4,13 @@ from django.core.mail import send_mail
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
-from rest_framework.decorators import api_view, action
+from rest_framework.decorators import action, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from api_yamdb.settings import ADMIN_EMAIL
+
 from .models import ConfirmationCode, CustomUser
 from .permissions import IsAdminRole, IsSuperuser
 from .serializers import (ConfirmationCodeSerializer, CustomUserSerializer,
