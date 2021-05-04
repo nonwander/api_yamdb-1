@@ -16,7 +16,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
     permission_classes = [ReviewCommentPermissions,
                           IsAuthenticatedOrReadOnly]
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer) -> None:
         title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
         serializer.save(author=self.request.user, title=title)
 

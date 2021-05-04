@@ -1,4 +1,3 @@
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 
@@ -21,15 +20,6 @@ class Genre(models.Model):
 class Title(models.Model):
     name = models.CharField(max_length=200)
     year = models.PositiveIntegerField(null=True, blank=True, db_index=True)
-    rating = models.SmallIntegerField(
-        'Рейтинг',
-        validators=[
-            MinValueValidator(0),
-            MaxValueValidator(10),
-        ],
-        blank=True,
-        null=True,
-    )
     description = models.CharField(max_length=400, blank=True)
     category = models.ForeignKey(Category,
                                  blank=True,

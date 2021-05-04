@@ -1,18 +1,16 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.db.models import Avg
 
 from api_users_auth.models import CustomUser
 from titles.models import Title
 
-from .validators import score_validator
-
 
 class Review(models.Model):
-    score = models.PositiveSmallIntegerField(
-        'Оценка',
-        choices=[(r, r) for r in range(1, 11)],
-        validators=[score_validator],
-    )
+    score = models.IntegerField(
+        validators=[
+            MinValueValidator(1, message='Введите число не меньше 1'),
+            MaxValueValidator(10, message='Введите число не больше 10')],
+        blank=True, null=True)
     text = models.TextField('Текст', blank=True, null=True)
     pub_date = models.DateTimeField(
         'Дата отзыва',
@@ -38,14 +36,6 @@ class Review(models.Model):
 
     def __str__(self):
         return self.text
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        self.score_avg = Review.objects.filter(title_id=self.title).aggregate(
-            Avg('score')
-        )
-        self.title.rating = self.score_avg['score__avg']
-        self.title.save()
 
 
 class Comment(models.Model):

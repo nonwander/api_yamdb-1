@@ -30,6 +30,17 @@ class GenreField(serializers.SlugRelatedField):
 
 
 class TitleSerializer(serializers.ModelSerializer):
+    genre = GenreSerializer(many=True, read_only=True, )
+    category = CategorySerializer()
+    rating = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        fields = ('id', 'name', 'year', 'rating', 'description',
+                  'genre', 'category')
+        model = Title
+
+
+class TitlePostSerializer(serializers.ModelSerializer):
     category = CategoryField(
         slug_field='slug',
         queryset=Category.objects.all(),
